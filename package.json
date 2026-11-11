@@ -10,7 +10,8 @@
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "images": "tsx scripts/generate-images.ts",
-    "setup": "prisma db push && tsx prisma/seed.ts"
+    "setup": "prisma db push && tsx prisma/seed.ts",
+    "apply:media": "tsx scripts/apply-photos.ts"
   },
   "dependencies": {
     "@google/model-viewer": "^4.4.0",
