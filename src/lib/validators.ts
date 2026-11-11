@@ -26,7 +26,7 @@ export const contactSchema = z.object({ name: z.string().trim().min(2, "Nombre r
 export const productSchema = z.object({
   name: z.string().trim().min(2), slug: z.string().trim().optional().or(z.literal("")), description: z.string().trim().min(10, "Descripción muy corta"), details: z.string().optional().default(""),
   price: z.number().positive("Precio inválido"), compareAt: z.number().positive().nullable().optional(), gender: z.enum(["HOMBRE", "MUJER", "UNISEX"]),
-  categoryId: z.string().min(1, "Selecciona una categoría"), collectionId: z.string().nullable().optional(), images: z.array(z.string().min(1)).min(1, "Agrega al menos una imagen"),
+  categoryId: z.string().min(1, "Selecciona una categoría"), collectionId: z.string().nullable().optional(), images: z.array(z.string().min(1)).min(1, "Agrega al menos una imagen"), model3d: z.string().trim().url("URL del modelo 3D inválida").nullable().optional().or(z.literal("")),
   sizes: z.array(z.string()).min(1, "Selecciona al menos una talla"), colors: z.array(z.object({ name: z.string().min(1), hex: z.string().regex(/^#[0-9a-fA-F]{6}$/), image: z.string().optional() })).min(1, "Agrega al menos un color"),
   stock: z.number().int().min(0), isNew: z.boolean(), isExclusive: z.boolean(), active: z.boolean(),
 });

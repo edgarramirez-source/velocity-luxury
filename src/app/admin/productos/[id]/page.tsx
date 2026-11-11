@@ -14,7 +14,7 @@ export default async function Editar({ params }: { params: Promise<{ id: string 
       <AdminHeader title="Editar producto" subtitle={p.name} />
       <ProductForm categories={categories} collections={collections} initial={{
         id: p.id, name: p.name, slug: p.slug, description: p.description, details: p.details, price: String(p.price), compareAt: p.compareAt ? String(p.compareAt) : "",
-        gender: p.gender as "UNISEX", categoryId: p.categoryId, collectionId: p.collectionId ?? "", images: safeJson(p.images, []), sizes: safeJson(p.sizes, []), colors: safeJson(p.colors, []),
+        gender: p.gender as "UNISEX", categoryId: p.categoryId, collectionId: p.collectionId ?? "", images: safeJson(p.images, []), model3d: p.model3d ?? "", sizes: safeJson(p.sizes, []), colors: safeJson(p.colors, []),
         stock: String(p.stock), isNew: p.isNew, isExclusive: p.isExclusive, active: p.active,
       }} />
     </div>

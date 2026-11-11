@@ -37,7 +37,7 @@ async function main() {
       data: {
         slug: p.slug, name: p.name, description: p.description, details: p.details.join("\n"), price: p.price, compareAt: p.compareAt ?? null,
         gender: p.gender, images: JSON.stringify(images), sizes: JSON.stringify(p.sizes), colors: JSON.stringify(colorObjs),
-        stock: p.stock, isNew: !!p.isNew, isExclusive: !!p.isExclusive, soldCount: p.soldCount, categoryId: cats[p.category],
+        model3d: PHOTOS[`model3d:${p.slug}`] ?? null, stock: p.stock, isNew: !!p.isNew, isExclusive: !!p.isExclusive, soldCount: p.soldCount, categoryId: cats[p.category],
         collectionId: p.collection ? cols[p.collection] : null, createdAt: created,
       },
     }));

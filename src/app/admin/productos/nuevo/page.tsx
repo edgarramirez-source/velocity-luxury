@@ -8,7 +8,7 @@ export default async function Nuevo() {
   return (
     <div>
       <AdminHeader title="Nuevo producto" />
-      <ProductForm categories={categories} collections={collections} initial={{ name: "", slug: "", description: "", details: "", price: "", compareAt: "", gender: "UNISEX", categoryId: "", collectionId: "", images: [], sizes: ["S", "M", "L", "XL"], colors: [{ name: "Nero", hex: "#111113" }], stock: "0", isNew: true, isExclusive: false, active: true }} />
+      <ProductForm categories={categories} collections={collections} initial={{ name: "", slug: "", description: "", details: "", price: "", compareAt: "", gender: "UNISEX", categoryId: "", collectionId: "", images: [], model3d: "", sizes: ["S", "M", "L", "XL"], colors: [{ name: "Nero", hex: "#111113" }], stock: "0", isNew: true, isExclusive: false, active: true }} />
     </div>
   );
 }

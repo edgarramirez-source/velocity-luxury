@@ -70,6 +70,7 @@ model Product {
   compareAt    Float?
   gender       String      @default("UNISEX") // HOMBRE | MUJER | UNISEX
   images       String      // JSON string[]
+  model3d      String?     // URL de modelo GLB para la vista 360°
   sizes        String      // JSON string[]
   colors       String      // JSON {name,hex}[]
   stock        Int         @default(0)

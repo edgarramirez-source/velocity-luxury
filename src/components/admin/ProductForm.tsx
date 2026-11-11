@@ -8,7 +8,7 @@ import { thumb } from "@/lib/media";
 
 export interface ProductFormValue {
   id?: string; name: string; slug: string; description: string; details: string; price: string; compareAt: string; gender: "HOMBRE" | "MUJER" | "UNISEX";
-  categoryId: string; collectionId: string; images: string[]; sizes: string[]; colors: { name: string; hex: string; image?: string }[]; stock: string; isNew: boolean; isExclusive: boolean; active: boolean;
+  categoryId: string; collectionId: string; images: string[]; model3d: string; sizes: string[]; colors: { name: string; hex: string; image?: string }[]; stock: string; isNew: boolean; isExclusive: boolean; active: boolean;
 }
 const PRESET_COLORS = [["Nero", "#111113"], ["Giallo", "#FFD400"], ["Grafito", "#3A3D42"], ["Titanio", "#8C9096"], ["Bianco", "#EEEEEA"], ["Arena", "#B9A88A"], ["Blu Notte", "#1B2540"], ["Rosso", "#8E1B1B"], ["Verde Corsa", "#2F4F38"]];
 
@@ -61,6 +61,7 @@ export function ProductForm({ initial, categories, collections }: { initial: Pro
             <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/avif" multiple hidden onChange={(e) => upload(e.target.files)} />
           </div>
           <p className="text-xs text-white/40">JPG, PNG, WEBP o AVIF · máx. 5 MB. La primera imagen es la principal.</p>
+          <div><label className="label" htmlFor="model3d">Modelo 3D para vista 360° (URL .glb, opcional)</label><input id="model3d" type="url" className="input" value={f.model3d} onChange={(e) => set("model3d", e.target.value)} placeholder="https://.../producto.glb" /></div>
           <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
             {f.images.map((img, i) => (
               <div key={img + i} className={cn("group relative aspect-[4/5] overflow-hidden border", i === 0 ? "border-giallo" : "border-white/10")}>

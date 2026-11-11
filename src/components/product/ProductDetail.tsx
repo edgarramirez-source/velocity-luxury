@@ -9,6 +9,8 @@ import { useUI } from "@/store/ui";
 import { FavoriteButton } from "../FavoriteButton";
 import { ProductBadges } from "../ProductCard";
 import { thumb } from "@/lib/media";
+import dynamic from "next/dynamic";
+const Viewer360 = dynamic(() => import("./Viewer360").then((m) => m.Viewer360), { ssr: false });
 
 const GUIDE = [["XS", "84–88", "68–72", "166–170"], ["S", "88–94", "72–78", "170–174"], ["M", "94–100", "78–84", "174–178"], ["L", "100–106", "84–90", "178–182"], ["XL", "106–112", "90–96", "182–186"], ["XXL", "112–118", "96–102", "186–190"]];
 
@@ -25,6 +27,7 @@ export function ProductDetail({ p }: { p: ProductDTO }) {
   const color = p.colors[colorIdx];
   const gallery = useMemo(() => { const g = [...p.images]; if (color?.image && !g.includes(color.image)) g.unshift(color.image); return g; }, [p.images, color]);
   const [imgIdx, setImgIdx] = useState(0);
+  const [view360, setView360] = useState(false);
   const current = gallery[imgIdx] ?? gallery[0];
   const off = discountPct(p.price, p.compareAt);
   const soldOut = p.stock === 0;
@@ -47,17 +50,25 @@ export function ProductDetail({ p }: { p: ProductDTO }) {
       <div className="grid gap-3 md:grid-cols-[84px_1fr]">
         <div className="order-2 flex gap-3 overflow-x-auto md:order-1 md:flex-col" role="tablist" aria-label="Imágenes del producto">
           {gallery.map((g, i) => (
-            <button key={g + i} role="tab" aria-selected={i === imgIdx} aria-label={`Imagen ${i + 1}`} onClick={() => setImgIdx(i)} className={cn("aspect-[4/5] w-20 shrink-0 overflow-hidden border transition md:w-full", i === imgIdx ? "border-giallo" : "border-white/10 opacity-60 hover:opacity-100")}>
+            <button key={g + i} role="tab" aria-selected={!view360 && i === imgIdx} aria-label={`Imagen ${i + 1}`} onClick={() => { setImgIdx(i); setView360(false); }} className={cn("aspect-[4/5] w-20 shrink-0 overflow-hidden border transition md:w-full", !view360 && i === imgIdx ? "border-giallo" : "border-white/10 opacity-60 hover:opacity-100")}>
               <img src={thumb(g)} alt="" className="h-full w-full object-cover" loading="lazy" />
             </button>
           ))}
+          {p.model3d && (
+            <button role="tab" aria-selected={view360} aria-label="Vista 360°" onClick={() => setView360(true)} className={cn("grid aspect-[4/5] w-20 shrink-0 place-items-center border bg-graphite font-tech text-[11px] tracking-widest transition md:w-full", view360 ? "border-giallo text-giallo" : "border-white/10 text-white/70 hover:text-giallo")}>360°</button>
+          )}
         </div>
+        {view360 && p.model3d ? (
+          <div className="relative order-1 aspect-[4/5] overflow-hidden md:order-2"><Viewer360 src={p.model3d} alt={`Vista 360° de ${p.name}`} poster={thumb(p.images[0])} /></div>
+        ) : (
         <div className="relative order-1 aspect-[4/5] cursor-zoom-in overflow-hidden bg-graphite md:order-2"
           onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); setZoom({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 }); }}
           onMouseLeave={() => setZoom(null)}>
           <img key={current} src={current} alt={`${p.name} — ${color?.name ?? ""}`} className="fade-in h-full w-full object-cover transition-transform duration-300" style={zoom ? { transform: "scale(1.8)", transformOrigin: `${zoom.x}% ${zoom.y}%` } : undefined} />
           <div className="pointer-events-none absolute left-4 top-4"><ProductBadges p={p} /></div>
+          {p.model3d && <button onClick={() => setView360(true)} className="absolute bottom-4 right-4 border border-giallo/60 bg-black/70 px-3 py-2 font-tech text-[9px] tracking-[0.2em] text-giallo backdrop-blur transition hover:bg-giallo hover:text-black">VER EN 360°</button>}
         </div>
+        )}
       </div>
 
       {/* Información */}

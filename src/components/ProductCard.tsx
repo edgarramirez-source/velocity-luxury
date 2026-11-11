@@ -45,6 +45,7 @@ export function ProductCard({ p, priority = false }: { p: ProductDTO; priority?:
           <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent opacity-0 transition duration-500 group-hover:opacity-100" />
         </Link>
         <div className="pointer-events-none absolute left-3 top-3"><ProductBadges p={p} /></div>
+        {p.model3d && <span className="pointer-events-none absolute bottom-3 right-3 border border-giallo/50 bg-black/60 px-2 py-1 font-tech text-[8px] tracking-[0.2em] text-giallo backdrop-blur lg:group-hover:opacity-0">360°</span>}
         <FavoriteButton productId={p.id} name={p.name} className="absolute right-3 top-3 grid h-9 w-9 place-items-center bg-black/40 backdrop-blur hover:bg-black/70" />
         {p.stock > 0 && (
           <div className="absolute inset-x-3 bottom-3 hidden translate-y-3 opacity-0 transition-all duration-500 ease-race group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100 lg:block">
