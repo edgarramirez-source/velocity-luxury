@@ -11,7 +11,7 @@ export const metadata = { title: "Pedidos" };
 
 export default async function Pedidos({ searchParams }: { searchParams: Promise<{ estado?: string; q?: string }> }) {
   const { estado, q } = await searchParams;
-  const where: Prisma.OrderWhereInput = { ...(estado ? { status: estado } : {}), ...(q ? { OR: [{ number: { contains: q } }, { customerName: { contains: q } }, { email: { contains: q } }] } : {}) };
+  const where: Prisma.OrderWhereInput = { ...(estado ? { status: estado } : {}), ...(q ? { OR: [{ number: { contains: q, mode: "insensitive" } }, { customerName: { contains: q, mode: "insensitive" } }, { email: { contains: q, mode: "insensitive" } }] } : {}) };
   const [orders, counts] = await Promise.all([prisma.order.findMany({ where, orderBy: { createdAt: "desc" }, include: { _count: { select: { items: true } } } }), prisma.order.groupBy({ by: ["status"], _count: true })]);
   const total = counts.reduce((s, c) => s + c._count, 0);
   return (

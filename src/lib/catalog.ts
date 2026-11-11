@@ -32,7 +32,7 @@ export async function getCatalog(sp: SP, forced: { oferta?: boolean; coleccion?:
   const page = Math.max(1, Number(one(sp.pagina)) || 1);
 
   const AND: Prisma.ProductWhereInput[] = [{ active: true }];
-  if (q) AND.push({ OR: [{ name: { contains: q } }, { description: { contains: q } }, { colors: { contains: q } }, { category: { name: { contains: q } } }, { collection: { name: { contains: q } } }] });
+  if (q) AND.push({ OR: [{ name: { contains: q, mode: "insensitive" } }, { description: { contains: q, mode: "insensitive" } }, { colors: { contains: q, mode: "insensitive" } }, { category: { name: { contains: q, mode: "insensitive" } } }, { collection: { name: { contains: q, mode: "insensitive" } } }] });
   if (cats.length) AND.push({ category: { slug: { in: cats } } });
   if (genero === "HOMBRE" || genero === "MUJER") AND.push({ gender: { in: [genero, "UNISEX"] } });
   if (sizes.length) AND.push({ OR: sizes.map((s) => ({ sizes: { contains: `"${s}"` } })) });

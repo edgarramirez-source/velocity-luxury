@@ -2,13 +2,13 @@
 
 Tienda completa (frontend + backend) con estética de superdeportivo: catálogo con filtros, carrito, checkout, cuentas de usuario y panel administrativo.
 
-**Stack:** Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Prisma + SQLite · JWT (jose) en cookie httpOnly · bcrypt · Zod · Zustand.
+**Stack:** Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Prisma + PostgreSQL · JWT (jose) en cookie httpOnly · bcrypt · Zod · Zustand.
 
 ## Puesta en marcha
 
 ```bash
 npm install
-cp .env.example .env        # cambia AUTH_SECRET por una cadena aleatoria de 32+ caracteres
+cp .env.example .env        # pon tu DATABASE_URL de PostgreSQL y un AUTH_SECRET de 32+ caracteres
 npm run setup               # crea la base de datos y carga los datos de demostración
 npm run dev                 # http://localhost:3000
 ```
@@ -55,8 +55,16 @@ Sin `SMTP_*`, los correos (confirmación de pedido, cambio de estado, recuperaci
 
 Las imágenes de producto incluidas son renders de estudio vectoriales generados por `npm run images` (`scripts/generate-images.ts`). Sustitúyelas por fotografía real desde el panel admin (Productos → Editar → Subir imágenes). Las subidas se guardan en `/uploads` y se sirven desde `/api/uploads/*` (JPG/PNG/WEBP/AVIF, máx. 5 MB, con verificación de firma).
 
-## Para publicar
+## Publicar en Vercel
 
-- Cambia `AUTH_SECRET` y `NEXT_PUBLIC_SITE_URL`.
-- SQLite sirve para un servidor único. Para hosting serverless (p. ej. Vercel) cambia el `provider` de `prisma/schema.prisma` a `postgresql` y mueve las subidas a un almacenamiento de objetos (S3, R2, Cloudinary), porque el disco no persiste.
-- El limitador de intentos de login es en memoria; con varias instancias usa Redis.
+1. Crea una base PostgreSQL gratuita en [Neon](https://neon.tech) y copia su *connection string*.
+2. En Vercel: **Add New → Project** → importa este repositorio.
+3. Variables de entorno: `DATABASE_URL` (Neon), `AUTH_SECRET` (cadena aleatoria de 32+ caracteres) y `NEXT_PUBLIC_SITE_URL` (la URL final, p. ej. `https://velocity-luxury.vercel.app`).
+4. **Deploy.** El script `vercel-build` crea las tablas y, si la base está vacía, carga los datos de demostración automáticamente (nunca borra datos existentes).
+5. Para subir imágenes desde el admin en producción: en el proyecto de Vercel, **Storage → Create → Blob** y conéctalo; Vercel añade `BLOB_READ_WRITE_TOKEN` solo. Sin él, las subidas usan el disco local (válido solo en un servidor propio).
+
+Notas: el limitador de intentos de login es en memoria (con muchas instancias conviene Redis). Las fotos y modelos 3D enlazan al CDN de Higgsfield; para no depender de él, descárgalas y súbelas desde el admin.
+
+## Vista 360°
+
+Los productos con campo `model3d` (URL de un `.glb`) muestran el botón **VER EN 360°** con un visor interactivo (`@google/model-viewer`). Se edita en Admin → Productos → Editar.

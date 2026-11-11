@@ -9,7 +9,7 @@ export const metadata = { title: "Clientes" };
 
 export default async function Clientes({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const me = await requireAdmin(); const { q } = await searchParams;
-  const users = await prisma.user.findMany({ where: q ? { OR: [{ name: { contains: q } }, { email: { contains: q } }] } : {}, orderBy: { createdAt: "desc" }, include: { orders: { where: { status: { not: "CANCELADO" } }, select: { total: true, createdAt: true } }, _count: { select: { favorites: true, addresses: true } } } });
+  const users = await prisma.user.findMany({ where: q ? { OR: [{ name: { contains: q, mode: "insensitive" } }, { email: { contains: q, mode: "insensitive" } }] } : {}, orderBy: { createdAt: "desc" }, include: { orders: { where: { status: { not: "CANCELADO" } }, select: { total: true, createdAt: true } }, _count: { select: { favorites: true, addresses: true } } } });
   const subs = await prisma.subscriber.count();
   return (
     <div>
