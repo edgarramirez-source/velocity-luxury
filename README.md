@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VELOCITY LUXURY — Tienda online de moda urbana de lujo
 
-## Getting Started
+Tienda completa (frontend + backend) con estética de superdeportivo: catálogo con filtros, carrito, checkout, cuentas de usuario y panel administrativo.
 
-First, run the development server:
+**Stack:** Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Prisma + SQLite · JWT (jose) en cookie httpOnly · bcrypt · Zod · Zustand.
+
+## Puesta en marcha
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env        # cambia AUTH_SECRET por una cadena aleatoria de 32+ caracteres
+npm run setup               # crea la base de datos y carga los datos de demostración
+npm run dev                 # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Producción: `npm run build && npm start`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Cuentas de demostración
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Rol | Correo | Contraseña |
+|---|---|---|
+| Administrador | admin@velocityluxury.com | Admin123! |
+| Cliente | cliente@velocityluxury.com | Cliente123! |
 
-## Learn More
+Códigos de descuento: `VELOCITY10` (10%), `BIENVENIDA20` (20% sobre $150), `ENVIOGRATIS`, `VIP50` ($50 sobre $300).
+Tarjeta demo: `4242 4242 4242 4242` (aprobada) · `4000 0000 0000 0002` (rechazada).
 
-To learn more about Next.js, take a look at the following resources:
+## Funcionalidades
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Tienda:** inicio con hero animado, categorías, novedades, colecciones, más vendidos, newsletter. Catálogo con búsqueda, filtros (categoría, género, precio, talla, color, novedades/exclusivos/ofertas), orden (precio, popularidad, novedades) y paginación. Ficha de producto con galería/zoom, selección de color (cambia la imagen), talla, cantidad, guía de tallas, favoritos y etiquetas NUEVO / EXCLUSIVO / OFERTA.
+- **Carrito:** persistente, edición de talla/color/cantidad, sincronización de precio y stock con la base, cupones, estimación de envío.
+- **Checkout en 4 pasos:** datos, dirección (o direcciones guardadas), envío, pago, confirmación. El servidor recalcula precios, valida stock/variantes/cupón y descuenta inventario en una transacción.
+- **Usuarios:** registro, login, recuperación de contraseña por token (hash SHA-256, expira en 1 h), perfil, cambio de contraseña, historial de pedidos, direcciones y favoritos.
+- **Admin (`/admin`, solo rol ADMIN):** estadísticas (ingresos, ticket promedio, ingresos diarios, más vendidos, stock bajo), CRUD de productos con subida de imágenes, precios, inventario, tallas y colores; pedidos con cambio de estado (cancelar repone stock y se notifica al cliente); clientes y roles; cupones; mensajes de contacto.
+- **Páginas:** Sobre nosotros, Contacto (formulario guardado en BD), FAQ, Privacidad, Términos, Devoluciones, Envíos.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Pagos
 
-## Deploy on Vercel
+Configura las variables en `.env` y el método aparece automáticamente en el checkout:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Pasarela | Variables | Flujo |
+|---|---|---|
+| Stripe | `STRIPE_SECRET_KEY` | Stripe Checkout → `/api/payments/stripe/return` verifica la sesión |
+| PayPal | `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_MODE` | Orders v2 → captura en `/api/payments/paypal/return` |
+| PayPhone | `PAYPHONE_TOKEN`, `PAYPHONE_STORE_ID` | Botón de pago → confirmación en `/api/payments/payphone/return` |
+| Demo / Transferencia / Contra entrega | `PAYMENT_DEMO_ENABLED` | Sin pasarela externa |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Antes de publicar, prueba cada pasarela con sus credenciales sandbox; las integraciones están implementadas según sus APIs públicas pero no se probaron contra cuentas reales.
+
+## Correo
+
+Sin `SMTP_*`, los correos (confirmación de pedido, cambio de estado, recuperación de contraseña) se imprimen en la consola del servidor y, en desarrollo, la pantalla de recuperación muestra el enlace directamente.
+
+## Imágenes
+
+Las imágenes de producto incluidas son renders de estudio vectoriales generados por `npm run images` (`scripts/generate-images.ts`). Sustitúyelas por fotografía real desde el panel admin (Productos → Editar → Subir imágenes). Las subidas se guardan en `/uploads` y se sirven desde `/api/uploads/*` (JPG/PNG/WEBP/AVIF, máx. 5 MB, con verificación de firma).
+
+## Para publicar
+
+- Cambia `AUTH_SECRET` y `NEXT_PUBLIC_SITE_URL`.
+- SQLite sirve para un servidor único. Para hosting serverless (p. ej. Vercel) cambia el `provider` de `prisma/schema.prisma` a `postgresql` y mueve las subidas a un almacenamiento de objetos (S3, R2, Cloudinary), porque el disco no persiste.
+- El limitador de intentos de login es en memoria; con varias instancias usa Redis.
