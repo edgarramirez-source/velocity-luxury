@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import { useUI } from "@/store/ui";
 import { formatPrice } from "@/lib/utils";
+import { thumb } from "@/lib/media";
 
 interface Hit { id: string; slug: string; name: string; price: number; image: string; category: string }
 const POPULAR = ["Hoodie", "Chaqueta", "Giallo", "Jogger", "Gorra", "Apex"];
@@ -58,7 +59,7 @@ export function SearchOverlay() {
               <ul className="grid gap-3 sm:grid-cols-2">
                 {hits.map((h) => (
                   <li key={h.id}><Link href={`/producto/${h.slug}`} onClick={() => setSearchOpen(false)} className="group flex items-center gap-4 border border-white/5 bg-white/[0.02] p-3 transition hover:border-giallo/50">
-                    <img src={h.image} alt="" className="h-20 w-16 object-cover" />
+                    <img src={thumb(h.image)} alt="" className="h-20 w-16 object-cover" />
                     <div><p className="font-tech text-[9px] tracking-[0.2em] text-white/40 uppercase">{h.category}</p><p className="mt-1 font-semibold group-hover:text-giallo transition">{h.name}</p><p className="text-sm text-white/60">{formatPrice(h.price)}</p></div>
                   </Link></li>
                 ))}

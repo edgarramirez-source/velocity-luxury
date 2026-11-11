@@ -5,6 +5,7 @@ import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { cartSubtotal, useCart } from "@/store/cart";
 import { formatPrice } from "@/lib/utils";
 import { FREE_SHIPPING_FROM } from "@/lib/shipping";
+import { thumb } from "@/lib/media";
 
 export function CartDrawer() {
   const { items, open, setOpen, remove, setQty } = useCart();
@@ -42,7 +43,7 @@ export function CartDrawer() {
             <ul className="flex-1 divide-y divide-white/5 overflow-y-auto px-6">
               {items.map((it) => (
                 <li key={it.key} className="flex gap-4 py-5">
-                  <Link href={`/producto/${it.slug}`} onClick={() => setOpen(false)}><img src={it.image} alt={it.name} className="h-28 w-[88px] object-cover" /></Link>
+                  <Link href={`/producto/${it.slug}`} onClick={() => setOpen(false)}><img src={thumb(it.image)} alt={it.name} className="h-28 w-[88px] object-cover" /></Link>
                   <div className="flex flex-1 flex-col">
                     <div className="flex justify-between gap-2"><Link href={`/producto/${it.slug}`} onClick={() => setOpen(false)} className="text-sm font-semibold hover:text-giallo">{it.name}</Link><p className="text-sm">{formatPrice(it.price * it.quantity)}</p></div>
                     <p className="mt-1 text-xs text-white/50">Talla {it.size} · {it.color}</p>

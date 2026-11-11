@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { CATEGORIES, COLLECTIONS, COLORS, PRODUCTS } from "./catalog";
+import photosJson from "./photos.json";
+
+const PHOTOS = photosJson as Record<string, string>;
 
 const prisma = new PrismaClient();
 const ACCESSORY = ["cap", "beanie", "bag", "sunglasses", "belt", "socks"];
@@ -14,19 +17,21 @@ async function main() {
 
   const cats: Record<string, string> = {};
   for (const [i, c] of CATEGORIES.entries()) {
-    const r = await prisma.category.create({ data: { slug: c.slug, name: c.name, description: c.description, image: `/images/categories/${c.slug}.svg`, sortOrder: i } });
+    const r = await prisma.category.create({ data: { slug: c.slug, name: c.name, description: c.description, image: (() => { const top = PRODUCTS.filter((x) => x.category === c.slug).sort((a, b) => b.soldCount - a.soldCount)[0]; return (top && PHOTOS[`product:${top.slug}`]) ?? `/images/categories/${c.slug}.svg`; })(), sortOrder: i } });
     cats[c.slug] = r.id;
   }
   const cols: Record<string, string> = {};
   for (const c of COLLECTIONS) {
-    const r = await prisma.collection.create({ data: { slug: c.slug, name: c.name, tagline: c.tagline, description: c.description, exclusive: c.exclusive, image: `/images/collections/${c.slug}.svg` } });
+    const r = await prisma.collection.create({ data: { slug: c.slug, name: c.name, tagline: c.tagline, description: c.description, exclusive: c.exclusive, image: PHOTOS[`collection:${c.slug}`] ?? `/images/collections/${c.slug}.svg` } });
     cols[c.slug] = r.id;
   }
   const products: import("@prisma/client").Product[] = [];
   for (const p of PRODUCTS) {
     const colorObjs = p.colors.map((k) => ({ name: COLORS[k].name, hex: COLORS[k].hex, image: `/images/products/${p.slug}-${k}.svg` }));
     const extra = `/images/products/${p.slug}-${ACCESSORY.includes(p.shape) ? "detail" : "back"}.svg`;
-    const images = [colorObjs[0].image, extra, ...colorObjs.slice(1).map((c) => c.image)];
+    const photo = PHOTOS[`product:${p.slug}`];
+    if (photo) colorObjs[0].image = photo;
+    const images = photo ? [photo, ...colorObjs.slice(1).map((c) => c.image)] : [colorObjs[0].image, extra, ...colorObjs.slice(1).map((c) => c.image)];
     const created = new Date(Date.now() - p.daysAgo * 86400000);
     products.push(await prisma.product.create({
       data: {

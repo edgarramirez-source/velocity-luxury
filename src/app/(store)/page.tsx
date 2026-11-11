@@ -6,6 +6,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Newsletter } from "@/components/Newsletter";
+import { HERO_IMAGE, thumb } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +24,7 @@ export default async function Home() {
       {/* HERO */}
       <section className="relative -mt-[72px] flex min-h-[100svh] items-end overflow-hidden pb-24 pt-40 sm:items-center sm:pb-0">
         <div className="absolute inset-0">
-          <img src="/images/hero.svg" alt="Modelo con hoodie Velocity frente a un superdeportivo en un garaje iluminado" className="zoom-out h-full w-full object-cover object-[70%_center]" fetchPriority="high" />
+          <img src={HERO_IMAGE} alt="Modelo con hoodie Velocity frente a un superdeportivo en un garaje iluminado" className="zoom-out h-full w-full object-cover object-[72%_center]" fetchPriority="high" />
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/70 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/40" />
           <div className="absolute inset-0 bg-ink/45 sm:hidden" />
@@ -67,7 +68,7 @@ export default async function Home() {
           {categories.map((c, i) => (
             <Reveal key={c.id} delay={(i % 4) * 90}>
               <Link href={`/tienda?categoria=${c.slug}`} className="group relative block aspect-[4/5] overflow-hidden bg-graphite">
-                <img src={c.image} alt={c.name} loading="lazy" className="h-full w-full object-cover transition duration-1000 ease-race group-hover:scale-110" />
+                <img src={thumb(c.image)} alt={c.name} loading="lazy" className="h-full w-full object-cover transition duration-1000 ease-race group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6">
                   <p className="font-tech text-[8px] tracking-[0.3em] text-giallo">{String(i + 1).padStart(2, "0")} · {c._count.products} PIEZAS</p>
@@ -124,7 +125,7 @@ export default async function Home() {
           {collections.map((c, i) => (
             <Reveal key={c.id} delay={i * 120}>
               <Link href={`/colecciones/${c.slug}`} className="group relative block aspect-[16/11] overflow-hidden bg-graphite md:aspect-[3/4]">
-                <img src={c.image} alt={`Colección ${c.name}`} loading="lazy" className="h-full w-full object-cover transition duration-1000 ease-race group-hover:scale-110" />
+                <img src={thumb(c.image)} alt={`Colección ${c.name}`} loading="lazy" className="h-full w-full object-cover transition duration-1000 ease-race group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
                 <div className="absolute bottom-0 p-6">
                   <h3 className="h-display text-4xl">{c.name}</h3>

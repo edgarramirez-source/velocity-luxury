@@ -3,13 +3,14 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PageHero } from "@/components/catalog/CatalogView";
 import { Reveal } from "@/components/Reveal";
+import { ABOUT_IMAGE } from "@/lib/media";
 
 export const metadata: Metadata = { title: "Sobre nosotros", description: "Historia, filosofía y personalidad de VELOCITY LUXURY." };
 
 export default function Nosotros() {
   return (
     <>
-      <PageHero eyebrow="Sobre nosotros" title="Nacidos para destacar" subtitle="Una marca de lujo urbano forjada entre el rugido de los motores y la precisión de la sastrería." image="/images/about.svg" />
+      <PageHero eyebrow="Sobre nosotros" title="Nacidos para destacar" subtitle="Una marca de lujo urbano forjada entre el rugido de los motores y la precisión de la sastrería." image={ABOUT_IMAGE} />
       <div className="container-x space-y-32">
         <section className="grid gap-12 lg:grid-cols-2">
           <Reveal><p className="eyebrow">Nuestra historia</p><h2 className="h-display mt-4 text-5xl sm:text-6xl">Del garaje a la pasarela</h2></Reveal>

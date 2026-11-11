@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { PageHero } from "@/components/catalog/CatalogView";
 import { Reveal } from "@/components/Reveal";
+import { thumb } from "@/lib/media";
 
 export const metadata: Metadata = { title: "Colecciones" };
 export const dynamic = "force-dynamic";
@@ -18,7 +19,7 @@ export default async function Colecciones() {
           <Reveal key={c.id}>
             <Link href={`/colecciones/${c.slug}`} className="group relative grid overflow-hidden border border-white/[0.06] bg-carbon md:grid-cols-2">
               <div className={`relative aspect-[16/9] overflow-hidden ${i % 2 ? "md:order-2" : ""}`}>
-                <img src={c.image} alt={`Colección ${c.name}`} loading={i < 2 ? "eager" : "lazy"} className="h-full w-full object-cover transition duration-1000 ease-race group-hover:scale-105" />
+                <img src={thumb(c.image)} alt={`Colección ${c.name}`} loading={i < 2 ? "eager" : "lazy"} className="h-full w-full object-cover transition duration-1000 ease-race group-hover:scale-105" />
               </div>
               <div className="flex flex-col justify-center p-8 sm:p-14">
                 <p className="eyebrow">{c.exclusive ? "Edición exclusiva" : `Colección 0${i}`} · {c._count.products} piezas</p>

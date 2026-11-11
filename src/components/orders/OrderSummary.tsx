@@ -1,6 +1,7 @@
 import type { Order, OrderItem } from "@prisma/client";
 import { cn, formatDate, formatPrice, STATUS_LABEL } from "@/lib/utils";
 import { SHIPPING_METHODS } from "@/lib/shipping";
+import { thumb } from "@/lib/media";
 
 const FLOW = ["PENDIENTE", "CONFIRMADO", "PREPARANDO", "ENVIADO", "ENTREGADO"];
 const PAY_NAME: Record<string, string> = { demo: "Tarjeta (demo)", transfer: "Transferencia bancaria", cod: "Contra entrega", stripe: "Stripe", paypal: "PayPal", payphone: "PayPhone" };
@@ -31,7 +32,7 @@ export function OrderSummary({ order }: { order: Order & { items: OrderItem[] } 
       <ul className="divide-y divide-white/[0.08] border-y border-white/[0.08]">
         {order.items.map((i) => (
           <li key={i.id} className="flex items-center gap-4 py-4">
-            <img src={i.image} alt="" className="h-20 w-16 object-cover" />
+            <img src={thumb(i.image)} alt="" className="h-20 w-16 object-cover" />
             <div className="flex-1 text-sm"><p className="font-semibold">{i.name}</p><p className="text-white/50">Talla {i.size} · {i.color} · × {i.quantity}</p></div>
             <p className="text-sm">{formatPrice(i.price * i.quantity)}</p>
           </li>

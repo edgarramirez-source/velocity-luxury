@@ -6,6 +6,7 @@ import { Pencil, Trash2, Eye } from "lucide-react";
 import { useUI } from "@/store/ui";
 import { cn, formatPrice } from "@/lib/utils";
 import { Th } from "./ui";
+import { thumb } from "@/lib/media";
 
 interface Row { id: string; slug: string; name: string; image: string; category: string; price: number; compareAt: number | null; stock: number; active: boolean; soldCount: number; isNew: boolean; isExclusive: boolean }
 
@@ -39,7 +40,7 @@ export function ProductTable({ rows, categories }: { rows: Row[]; categories: st
           <tbody>
             {list.map((r) => (
               <tr key={r.id} className="border-b border-white/[0.04] hover:bg-white/[0.02]">
-                <td className="px-4 py-3"><div className="flex items-center gap-3"><img src={r.image} alt="" className="h-14 w-11 object-cover" /><div><Link href={`/admin/productos/${r.id}`} className="font-semibold hover:text-giallo">{r.name}</Link><div className="mt-1 flex gap-1">{r.isNew && <span className="badge bg-white/10 py-0.5 text-white/70">Nuevo</span>}{r.isExclusive && <span className="badge bg-giallo/15 py-0.5 text-giallo">Exclusivo</span>}{r.compareAt && r.compareAt > r.price && <span className="badge bg-giallo py-0.5 text-black">Oferta</span>}</div></div></div></td>
+                <td className="px-4 py-3"><div className="flex items-center gap-3"><img src={thumb(r.image)} alt="" className="h-14 w-11 object-cover" /><div><Link href={`/admin/productos/${r.id}`} className="font-semibold hover:text-giallo">{r.name}</Link><div className="mt-1 flex gap-1">{r.isNew && <span className="badge bg-white/10 py-0.5 text-white/70">Nuevo</span>}{r.isExclusive && <span className="badge bg-giallo/15 py-0.5 text-giallo">Exclusivo</span>}{r.compareAt && r.compareAt > r.price && <span className="badge bg-giallo py-0.5 text-black">Oferta</span>}</div></div></div></td>
                 <td className="px-4 py-3 text-white/60">{r.category}</td>
                 <td className="px-4 py-3">{formatPrice(r.price)}{r.compareAt && <span className="ml-2 text-xs text-white/40 line-through">{formatPrice(r.compareAt)}</span>}</td>
                 <td className="px-4 py-3">

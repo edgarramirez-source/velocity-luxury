@@ -9,6 +9,7 @@ import { computeTotals, SHIPPING_METHODS, FREE_SHIPPING_FROM } from "@/lib/shipp
 import { cn, formatPrice } from "@/lib/utils";
 import { useCartOptions, useCoupon, useMounted } from "./hooks";
 import { CouponBox } from "./CouponBox";
+import { thumb } from "@/lib/media";
 
 interface Address { id: string; label: string; fullName: string; phone: string; line1: string; line2: string | null; city: string; province: string; postalCode: string | null; isDefault: boolean }
 interface PM { id: string; name: string; description: string; kind: string }
@@ -218,7 +219,7 @@ export function Checkout({ user, addresses, methods }: { user: { name: string; e
         <ul className="max-h-80 space-y-4 overflow-y-auto">
           {items.map((i) => (
             <li key={i.key} className="flex gap-4">
-              <div className="relative"><img src={i.image} alt="" className="h-20 w-16 object-cover" /><span className="absolute -right-2 -top-2 grid h-5 w-5 place-items-center rounded-full bg-giallo text-[10px] font-bold text-black">{i.quantity}</span></div>
+              <div className="relative"><img src={thumb(i.image)} alt="" className="h-20 w-16 object-cover" /><span className="absolute -right-2 -top-2 grid h-5 w-5 place-items-center rounded-full bg-giallo text-[10px] font-bold text-black">{i.quantity}</span></div>
               <div className="flex-1 text-sm"><p className="font-semibold">{i.name}</p><p className="text-white/50">{i.size} · {i.color}</p></div>
               <p className="text-sm">{formatPrice(i.price * i.quantity)}</p>
             </li>

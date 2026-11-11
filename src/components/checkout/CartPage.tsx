@@ -7,6 +7,7 @@ import { computeTotals, SHIPPING_METHODS, FREE_SHIPPING_FROM } from "@/lib/shipp
 import { formatPrice } from "@/lib/utils";
 import { useCartOptions, useCoupon, useMounted } from "./hooks";
 import { CouponBox } from "./CouponBox";
+import { thumb } from "@/lib/media";
 
 export function CartPage() {
   const mounted = useMounted();
@@ -38,7 +39,7 @@ export function CartPage() {
               const o = opts[it.productId];
               return (
                 <li key={it.key} className="grid grid-cols-[96px_1fr] gap-5 py-6 sm:grid-cols-[120px_1fr_auto]">
-                  <Link href={`/producto/${it.slug}`}><img src={it.image} alt={it.name} className="aspect-[4/5] w-full object-cover" /></Link>
+                  <Link href={`/producto/${it.slug}`}><img src={thumb(it.image)} alt={it.name} className="aspect-[4/5] w-full object-cover" /></Link>
                   <div className="min-w-0">
                     <Link href={`/producto/${it.slug}`} className="font-semibold hover:text-giallo">{it.name}</Link>
                     <p className="mt-1 text-sm text-white/50">{formatPrice(it.price)} c/u</p>

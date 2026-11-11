@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { ArrowDown, ArrowUp, ImagePlus, Plus, Trash2, X } from "lucide-react";
 import { useUI } from "@/store/ui";
 import { ALL_SIZES, cn } from "@/lib/utils";
+import { thumb } from "@/lib/media";
 
 export interface ProductFormValue {
   id?: string; name: string; slug: string; description: string; details: string; price: string; compareAt: string; gender: "HOMBRE" | "MUJER" | "UNISEX";
@@ -63,7 +64,7 @@ export function ProductForm({ initial, categories, collections }: { initial: Pro
           <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
             {f.images.map((img, i) => (
               <div key={img + i} className={cn("group relative aspect-[4/5] overflow-hidden border", i === 0 ? "border-giallo" : "border-white/10")}>
-                <img src={img} alt="" className="h-full w-full object-cover" />
+                <img src={thumb(img)} alt="" className="h-full w-full object-cover" />
                 {i === 0 && <span className="badge absolute left-1 top-1 bg-giallo text-black">Principal</span>}
                 <div className="absolute inset-x-0 bottom-0 flex justify-between bg-black/80 p-1 opacity-0 transition group-hover:opacity-100 group-focus-within:opacity-100">
                   <button type="button" onClick={() => move(i, -1)} aria-label="Mover a la izquierda" className="p-1 hover:text-giallo"><ArrowUp size={14} className="-rotate-90" /></button>

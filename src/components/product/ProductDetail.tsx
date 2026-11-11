@@ -8,6 +8,7 @@ import { useCart } from "@/store/cart";
 import { useUI } from "@/store/ui";
 import { FavoriteButton } from "../FavoriteButton";
 import { ProductBadges } from "../ProductCard";
+import { thumb } from "@/lib/media";
 
 const GUIDE = [["XS", "84–88", "68–72", "166–170"], ["S", "88–94", "72–78", "170–174"], ["M", "94–100", "78–84", "174–178"], ["L", "100–106", "84–90", "178–182"], ["XL", "106–112", "90–96", "182–186"], ["XXL", "112–118", "96–102", "186–190"]];
 
@@ -47,7 +48,7 @@ export function ProductDetail({ p }: { p: ProductDTO }) {
         <div className="order-2 flex gap-3 overflow-x-auto md:order-1 md:flex-col" role="tablist" aria-label="Imágenes del producto">
           {gallery.map((g, i) => (
             <button key={g + i} role="tab" aria-selected={i === imgIdx} aria-label={`Imagen ${i + 1}`} onClick={() => setImgIdx(i)} className={cn("aspect-[4/5] w-20 shrink-0 overflow-hidden border transition md:w-full", i === imgIdx ? "border-giallo" : "border-white/10 opacity-60 hover:opacity-100")}>
-              <img src={g} alt="" className="h-full w-full object-cover" loading="lazy" />
+              <img src={thumb(g)} alt="" className="h-full w-full object-cover" loading="lazy" />
             </button>
           ))}
         </div>

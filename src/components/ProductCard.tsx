@@ -6,6 +6,7 @@ import { discountPct, formatPrice } from "@/lib/utils";
 import { FavoriteButton } from "./FavoriteButton";
 import { useCart } from "@/store/cart";
 import { useUI } from "@/store/ui";
+import { isPhoto, thumb } from "@/lib/media";
 
 export function ProductBadges({ p }: { p: Pick<ProductDTO, "isNew" | "isExclusive" | "price" | "compareAt" | "stock"> }) {
   const off = discountPct(p.price, p.compareAt);
@@ -27,7 +28,7 @@ export function ProductCard({ p, priority = false }: { p: ProductDTO; priority?:
   const toast = useUI((s) => s.toast);
   const color = p.colors[colorIdx];
   const main = color?.image ?? p.images[0];
-  const second = p.images[1] ?? main;
+  const second = p.images.find((x, i) => i > 0 && x !== main && isPhoto(x) === isPhoto(main)) ?? main;
 
   function quickAdd(size: string) {
     add({ productId: p.id, slug: p.slug, name: p.name, image: main, price: p.price, size, color: color?.name ?? "Único", quantity: 1, maxStock: p.stock });
@@ -39,8 +40,8 @@ export function ProductCard({ p, priority = false }: { p: ProductDTO; priority?:
     <article className="group relative" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
       <div className="relative aspect-[4/5] overflow-hidden bg-graphite">
         <Link href={`/producto/${p.slug}`} className="absolute inset-0 block" aria-label={p.name}>
-          <img src={main} alt={`${p.name} en color ${color?.name ?? ""}`} loading={priority ? "eager" : "lazy"} decoding="async" className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-race ${hover ? "scale-105 opacity-0" : "scale-100 opacity-100"}`} />
-          <img src={second} alt="" aria-hidden loading="lazy" decoding="async" className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-race ${hover ? "scale-100 opacity-100" : "scale-105 opacity-0"}`} />
+          <img src={thumb(main)} alt={`${p.name} en color ${color?.name ?? ""}`} loading={priority ? "eager" : "lazy"} decoding="async" className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-race ${hover ? "scale-105 opacity-0" : "scale-100 opacity-100"}`} />
+          <img src={thumb(second)} alt="" aria-hidden loading="lazy" decoding="async" className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-race ${hover ? "scale-100 opacity-100" : "scale-105 opacity-0"}`} />
           <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent opacity-0 transition duration-500 group-hover:opacity-100" />
         </Link>
         <div className="pointer-events-none absolute left-3 top-3"><ProductBadges p={p} /></div>
